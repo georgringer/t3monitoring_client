@@ -1,5 +1,5 @@
 {
-  "name": "georgringer/t3monitoring_client",
+  "name": "t3monitor/t3monitoring_client",
   "type": "typo3-cms-extension",
   "description": "Client extension for the t3monitoring service",
   "license": [
@@ -7,7 +7,7 @@
   ],
   "version": "0.0.1",
   "require": {
-    "typo3/cms-core": ">=6.2.0,<8.0"
+    "typo3/cms-core": ">=4.4.0,<4.6.0"
   },
   "autoload": {
     "psr-4": {

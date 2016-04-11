@@ -31,7 +31,7 @@ class ExtensionManagerSlot
 
             $configuration = $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['t3monitoring_client'];
             if (!isset($configuration)) {
-                $configuration = [];
+                $configuration = array();
             } else {
                 $configuration = unserialize($configuration);
             }
