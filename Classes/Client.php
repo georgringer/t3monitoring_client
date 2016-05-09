@@ -14,6 +14,7 @@ use T3Monitor\T3monitoringClient\Client as ClientService;
 use T3Monitor\T3monitoringClient\Provider\DataProviderInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\HttpUtility;
+use TYPO3\CMS\Frontend\Utility\EidUtility;
 
 class Client
 {
@@ -26,6 +27,15 @@ class Client
         if (!$this->checkAccess()) {
             HttpUtility::setResponseCodeAndExit(HttpUtility::HTTP_STATUS_403);
         }
+
+        EidUtility::initTCA();
+        $GLOBALS['TSFE'] = GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController', $GLOBALS['TYPO3_CONF_VARS'], 0, 0, true);
+        $GLOBALS['TSFE']->connectToDB();
+        $GLOBALS['TSFE']->fe_user = EidUtility::initFeUser();
+        $GLOBALS['TSFE']->id = 0;
+        $GLOBALS['TSFE']->determineId();
+        $GLOBALS['TSFE']->initTemplate();
+        $GLOBALS['TSFE']->getConfigArray();
 
         $data = $this->collectData();
         echo json_encode($data);
