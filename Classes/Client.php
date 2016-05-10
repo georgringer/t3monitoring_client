@@ -28,15 +28,6 @@ class Client
             HttpUtility::setResponseCodeAndExit(HttpUtility::HTTP_STATUS_403);
         }
 
-        EidUtility::initTCA();
-        $GLOBALS['TSFE'] = GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController', $GLOBALS['TYPO3_CONF_VARS'], 0, 0, true);
-        $GLOBALS['TSFE']->connectToDB();
-        $GLOBALS['TSFE']->fe_user = EidUtility::initFeUser();
-        $GLOBALS['TSFE']->id = 0;
-        $GLOBALS['TSFE']->determineId();
-        $GLOBALS['TSFE']->initTemplate();
-        $GLOBALS['TSFE']->getConfigArray();
-
         $data = $this->collectData();
         echo json_encode($data);
     }
