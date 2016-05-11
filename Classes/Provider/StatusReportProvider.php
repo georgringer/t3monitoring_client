@@ -77,7 +77,7 @@ class StatusReportProvider implements DataProviderInterface
     protected function getLanguageService()
     {
         if ($GLOBALS['LANG'] === null) {
-            $GLOBALS['LANG'] = GeneralUtility::makeInstance(\TYPO3\CMS\Lang\LanguageService::class);
+            $GLOBALS['LANG'] = GeneralUtility::makeInstance('TYPO3\\CMS\\Lang\\LanguageService');
         }
         return $GLOBALS['LANG'];
     }
