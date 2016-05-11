@@ -1,5 +1,4 @@
 <?php
-
 namespace T3Monitor\T3monitoringClient\Provider;
 
 /*
@@ -15,9 +14,17 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extensionmanager\Utility\EmConfUtility;
 use TYPO3\CMS\Extensionmanager\Utility\ListUtility;
 
+/**
+ * Class Extension6xProvider
+ */
 class Extension6xProvider implements DataProviderInterface
 {
 
+    /**
+     * @param array $data
+     * @return array
+     * @throws \BadFunctionCallException
+     */
     public function get(array $data)
     {
         $GLOBALS['LANG'] = GeneralUtility::makeInstance('TYPO3\\CMS\\Lang\\LanguageService');
@@ -42,5 +49,4 @@ class Extension6xProvider implements DataProviderInterface
 
         return $data;
     }
-
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace T3Monitor\T3monitoringClient\Provider;
 
 /*
@@ -9,6 +8,9 @@ namespace T3Monitor\T3monitoringClient\Provider;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+/**
+ * Interface DataProviderInterface
+ */
 interface DataProviderInterface
 {
 
@@ -19,5 +21,4 @@ interface DataProviderInterface
      * @return array
      */
     public function get(array $data);
-
 }

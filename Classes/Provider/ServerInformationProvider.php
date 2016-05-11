@@ -1,5 +1,4 @@
 <?php
-
 namespace T3Monitor\T3monitoringClient\Provider;
 
 /*
@@ -11,9 +10,16 @@ namespace T3Monitor\T3monitoringClient\Provider;
 
 use TYPO3\CMS\Core\Database\DatabaseConnection;
 
+/**
+ * Class ServerInformationProvider
+ */
 class ServerInformationProvider implements DataProviderInterface
 {
 
+    /**
+     * @param array $data
+     * @return array
+     */
     public function get(array $data)
     {
         $data['core']['typo3Version'] = TYPO3_version;
@@ -30,5 +36,4 @@ class ServerInformationProvider implements DataProviderInterface
     {
         return $GLOBALS['TYPO3_DB'];
     }
-
 }

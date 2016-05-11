@@ -1,5 +1,4 @@
 <?php
-
 namespace T3Monitor\T3monitoringClient\Provider;
 
 /*
@@ -11,14 +10,19 @@ namespace T3Monitor\T3monitoringClient\Provider;
 
 use TYPO3\CMS\Core\Core\Bootstrap;
 
+/**
+ * Class ComposerInformationProvider
+ */
 class ComposerInformationProvider implements DataProviderInterface
 {
 
+    /**
+     * @param array $data
+     * @return array
+     */
     public function get(array $data)
     {
         $data['extra']['info']['Composer Usage'] = Bootstrap::usesComposerClassLoading() ? 'yes' : 'no';
-
         return $data;
     }
-
 }

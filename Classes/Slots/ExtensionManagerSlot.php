@@ -1,5 +1,4 @@
 <?php
-
 namespace T3Monitor\T3monitoringClient\Slots;
 
 /*
@@ -12,6 +11,9 @@ namespace T3Monitor\T3monitoringClient\Slots;
 use TYPO3\CMS\Core\Configuration\ConfigurationManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * Class ExtensionManagerSlot
+ */
 class ExtensionManagerSlot
 {
     const SECRET_LENGTH = 50;

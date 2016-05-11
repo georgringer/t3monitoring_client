@@ -3,7 +3,7 @@
 secret =
 
 # cat=features/enable/2; type=string; label=Allowed IPs:Restrict the endpoint to specific IPs. Comma separated lists are possible
-allowedIps =
+allowedIps = *
 
 # cat=features/enable/3; type=boolean; label=Enable debugging: Instead of silently stopping the endpoint call, the error is outputted. Just enable this to debug if a connection is not possible!
 enableDebugForErrors = 0

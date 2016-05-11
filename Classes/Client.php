@@ -1,5 +1,4 @@
 <?php
-
 namespace T3Monitor\T3monitoringClient;
 
 /*
@@ -16,11 +15,15 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\HttpUtility;
 use TYPO3\CMS\Frontend\Utility\EidUtility;
 
+/**
+ * Class Client
+ */
 class Client
 {
 
     /**
      * Entry point
+     * @throws \Exception
      */
     public function run()
     {
@@ -45,7 +48,6 @@ class Client
         if (empty($classes)) {
             $data['error'] = 'No providers';
         } else {
-
             foreach ($classes as $class) {
                 /** @var DataProviderInterface $call */
                 $call = GeneralUtility::makeInstance($class);
@@ -63,6 +65,7 @@ class Client
      * Check if access is allowed to the endpoint
      *
      * @return bool
+     * @throws \Exception
      */
     protected function checkAccess()
     {
@@ -96,7 +99,6 @@ class Client
 
         return true;
     }
-
 }
 
 /** @var ClientService $client */

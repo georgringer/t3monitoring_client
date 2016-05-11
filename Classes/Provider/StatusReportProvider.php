@@ -1,5 +1,4 @@
 <?php
-
 namespace T3Monitor\T3monitoringClient\Provider;
 
 /*
@@ -12,6 +11,9 @@ namespace T3Monitor\T3monitoringClient\Provider;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Reports\Status;
 
+/**
+ * Class StatusReportProvider
+ */
 class StatusReportProvider implements DataProviderInterface
 {
 
@@ -34,7 +36,6 @@ class StatusReportProvider implements DataProviderInterface
         foreach ($statusCollection as $statusProvider => $providerStatuses) {
             /** @var $status \TYPO3\CMS\Reports\Status */
             foreach ($providerStatuses as $status) {
-
                 if ($status->getSeverity() > Status::OK) {
                     $title = sprintf('%s - %s', $status->getTitle(), $status->getValue());
                     $convertedSeverity = $severityConversion[$status->getSeverity()];
@@ -63,7 +64,7 @@ class StatusReportProvider implements DataProviderInterface
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers']['configuration'][] = 'TYPO3\\CMS\\Reports\\Report\\Status\\ConfigurationStatus';
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers']['fal'][] = 'TYPO3\\CMS\\Reports\\Report\\Status\\FalStatus';
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers']['typo3'][] = 'TYPO3\\CMS\\Install\\Report\\InstallStatusReport';
-        if (\TYPO3\CMS\Core\Utility\GeneralUtility::compat_version('7.0')) {
+        if (GeneralUtility::compat_version('7.0')) {
             $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers']['security'][] = 'TYPO3\\CMS\\Install\\Report\\SecurityStatusReport';
         }
     }
@@ -75,7 +76,7 @@ class StatusReportProvider implements DataProviderInterface
      */
     protected function getLanguageService()
     {
-        if (is_null($GLOBALS['LANG'])) {
+        if ($GLOBALS['LANG'] === null) {
             $GLOBALS['LANG'] = GeneralUtility::makeInstance(\TYPO3\CMS\Lang\LanguageService::class);
         }
         return $GLOBALS['LANG'];
