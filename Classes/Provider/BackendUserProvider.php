@@ -24,8 +24,7 @@ class BackendUserProvider implements DataProviderInterface
     public function get(array $data)
     {
         $backendUsers = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'be_users', 'deleted=0');
-        foreach($backendUsers as $backendUser)
-        {
+        foreach ($backendUsers as $backendUser) {
             $backendUserData = array(
                 'userName' => $backendUser['username'],
                 'realName' => $backendUser['realName'],
