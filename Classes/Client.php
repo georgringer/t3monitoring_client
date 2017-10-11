@@ -14,7 +14,6 @@ use T3Monitor\T3monitoringClient\Client as ClientService;
 use T3Monitor\T3monitoringClient\Provider\DataProviderInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\HttpUtility;
-use TYPO3\CMS\Frontend\Utility\EidUtility;
 
 /**
  * Class Client
