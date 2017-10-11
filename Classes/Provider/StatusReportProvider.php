@@ -30,11 +30,11 @@ class StatusReportProvider implements DataProviderInterface
             $statusReport = GeneralUtility::makeInstance('TYPO3\\CMS\\Reports\\Report\\Status\\Status');
             $statusCollection = $statusReport->getSystemStatus();
 
-            $severityConversion = [
+            $severityConversion = array (
                 Status::INFO => 'info',
                 Status::WARNING => 'warning',
                 Status::ERROR => 'danger',
-            ];
+            );
             foreach ($statusCollection as $statusProvider => $providerStatuses) {
                 /** @var $status \TYPO3\CMS\Reports\Status */
                 foreach ($providerStatuses as $status) {
