@@ -1,4 +1,5 @@
 <?php
+
 namespace T3Monitor\T3monitoringClient;
 
 /*
@@ -27,12 +28,41 @@ class Client
      */
     public function run()
     {
+        $settings = (array)unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['t3monitoring_client']);
+
         if (!$this->checkAccess()) {
             HttpUtility::setResponseCodeAndExit(HttpUtility::HTTP_STATUS_403);
         }
 
         $data = $this->collectData();
-        echo json_encode($data);
+        $data = $this->utf8Converter($data);
+
+        // Generate json
+        if ($output = json_encode($data)) {
+            echo $output;
+        } else {
+            if (isset($settings['enableDebugForErrors']) && (int)$settings['enableDebugForErrors'] === 1) {
+                echo 'ERROR: Problems while encoding Json';
+            }
+            HttpUtility::setResponseCodeAndExit(HttpUtility::HTTP_STATUS_403);
+        }
+    }
+
+    /**
+     * Convert array to UTF-8
+     *
+     * @param $array
+     * @return array
+     */
+    protected function utf8Converter($array)
+    {
+        array_walk_recursive($array, function (&$item, $key) {
+            if (!mb_detect_encoding($item, 'utf-8', true)) {
+                $item = utf8_encode($item);
+            }
+        });
+
+        return $array;
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 namespace T3Monitor\T3monitoringClient\Provider;
 
 /*
@@ -25,6 +26,8 @@ class ServerInformationProvider implements DataProviderInterface
         $data['core']['typo3Version'] = TYPO3_version;
         $data['core']['phpVersion'] = substr(phpversion(), 0, strpos(phpversion() . '-', '-'));
         $data['core']['mysqlClientVersion'] = mysqli_get_client_version($this->getDatabaseConnection()->getDatabaseHandle());
+        $data['core']['diskTotalSpace'] = disk_total_space(PATH_site);
+        $data['core']['diskFreeSpace'] = disk_free_space(PATH_site);
 
         return $data;
     }

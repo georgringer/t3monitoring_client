@@ -8,6 +8,7 @@ namespace T3Monitor\T3monitoringClient\Provider;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Reports\Status;
 
@@ -23,23 +24,25 @@ class StatusReportProvider implements DataProviderInterface
      */
     public function get(array $data)
     {
-        $this->initialize();
-        /** @var $statusReport \TYPO3\CMS\Reports\Report\Status\Status */
-        $statusReport = GeneralUtility::makeInstance('TYPO3\\CMS\\Reports\\Report\\Status\\Status');
-        $statusCollection = $statusReport->getSystemStatus();
+        if (ExtensionManagementUtility::isLoaded('reports')) {
+            $this->initialize();
+            /** @var $statusReport \TYPO3\CMS\Reports\Report\Status\Status */
+            $statusReport = GeneralUtility::makeInstance('TYPO3\\CMS\\Reports\\Report\\Status\\Status');
+            $statusCollection = $statusReport->getSystemStatus();
 
-        $severityConversion = array(
-            Status::INFO => 'info',
-            Status::WARNING => 'warning',
-            Status::ERROR => 'danger',
-        );
-        foreach ($statusCollection as $statusProvider => $providerStatuses) {
-            /** @var $status \TYPO3\CMS\Reports\Status */
-            foreach ($providerStatuses as $status) {
-                if ($status->getSeverity() > Status::OK) {
-                    $title = sprintf('%s - %s', $status->getTitle(), $status->getValue());
-                    $convertedSeverity = $severityConversion[$status->getSeverity()];
-                    $data['extra'][$convertedSeverity][$title] = $status->getMessage();
+            $severityConversion = [
+                Status::INFO => 'info',
+                Status::WARNING => 'warning',
+                Status::ERROR => 'danger',
+            ];
+            foreach ($statusCollection as $statusProvider => $providerStatuses) {
+                /** @var $status \TYPO3\CMS\Reports\Status */
+                foreach ($providerStatuses as $status) {
+                    if ($status->getSeverity() > Status::OK) {
+                        $title = sprintf('%s - %s', $status->getTitle(), $status->getValue());
+                        $convertedSeverity = $severityConversion[$status->getSeverity()];
+                        $data['extra'][$convertedSeverity][$title] = $status->getMessage();
+                    }
                 }
             }
         }

@@ -25,7 +25,7 @@ class ExtensionManagerSlot
     {
         if ($extensionKey === 't3monitoring_client') {
             if (!isset($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['t3monitoring_client'])) {
-                $configuration = [];
+                $configuration = array();
             } else {
                 $configuration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['t3monitoring_client']);
             }
