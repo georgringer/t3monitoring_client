@@ -14,6 +14,7 @@ use T3Monitor\T3monitoringClient\Provider\DataProviderInterface;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\HttpUtility;
+use TYPO3\CMS\Core\Core\Bootstrap;
 
 /**
  * Class Client
@@ -32,6 +33,9 @@ class Client
         if (!$this->checkAccess()) {
             HttpUtility::setResponseCodeAndExit(HttpUtility::HTTP_STATUS_403);
         }
+
+        Bootstrap::initializeBackendRouter();
+        Bootstrap::loadExtTables();
 
         $data = $this->collectData();
         $data = $this->utf8Converter($data);
