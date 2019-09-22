@@ -17,6 +17,7 @@ if (version_compare(TYPO3_branch, '9.0', '>=')) {
 
 if ($version >= 8) {
     $GLOBALS['TYPO3_CONF_VARS']['EXT']['t3monitoring_client']['provider'][] = 'T3Monitor\\T3monitoringClient\\Provider\\ServerInformation8xProvider';
+    $GLOBALS['TYPO3_CONF_VARS']['EXT']['t3monitoring_client']['provider'][] = 'T3Monitor\\T3monitoringClient\\Provider\\ConfigurationProvider';
 } else {
     $GLOBALS['TYPO3_CONF_VARS']['EXT']['t3monitoring_client']['provider'][] = 'T3Monitor\\T3monitoringClient\\Provider\\ServerInformationProvider';
 }
