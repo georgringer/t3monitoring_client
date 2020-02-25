@@ -9,14 +9,16 @@ namespace T3Monitor\T3monitoringClient\Provider;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extensionmanager\Utility\EmConfUtility;
 use TYPO3\CMS\Extensionmanager\Utility\ListUtility;
 
 /**
- * Class Extension7xProvider
+ * Class ExtensionProvider
  */
 class ExtensionProvider implements DataProviderInterface
 {
@@ -28,6 +30,7 @@ class ExtensionProvider implements DataProviderInterface
      */
     public function get(array $data)
     {
+        $hasNewEmConfApi = VersionNumberUtility::convertVersionNumberToInteger('10.2') < VersionNumberUtility::convertVersionNumberToInteger(TYPO3_branch);
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $listUtility = $objectManager->get(ListUtility::class);
 
@@ -35,10 +38,11 @@ class ExtensionProvider implements DataProviderInterface
 
         $emConfUtility = GeneralUtility::makeInstance(EmConfUtility::class);
         foreach ($allExtensions as $key => $f) {
-            if (is_dir(PATH_site . 'typo3/sysext/' . $key . '/')) {
+            if (is_dir(Environment::getBackendPath() . '/sysext/' . $key . '/')) {
                 continue;
             }
-            $data['extensions'][$key] = $emConfUtility->includeEmConf($f);
+
+            $data['extensions'][$key] = $hasNewEmConfApi ? $emConfUtility->includeEmConf($key, $f) : $emConfUtility->includeEmConf($f);
             $data['extensions'][$key]['isLoaded'] = (int)ExtensionManagementUtility::isLoaded($key);
         }
 

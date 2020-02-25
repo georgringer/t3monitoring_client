@@ -9,7 +9,7 @@ namespace T3Monitor\T3monitoringClient\Provider;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use TYPO3\CMS\Core\Core\Bootstrap;
+use TYPO3\CMS\Core\Core\Environment;
 
 /**
  * Class ComposerInformationProvider
@@ -23,7 +23,7 @@ class ComposerInformationProvider implements DataProviderInterface
      */
     public function get(array $data)
     {
-        $data['extra']['info']['Composer Usage'] = Bootstrap::usesComposerClassLoading() ? 'yes' : 'no';
+        $data['extra']['info']['Composer Usage'] = Environment::isComposerMode() ? 'yes' : 'no';
         return $data;
     }
 }

@@ -9,12 +9,18 @@ namespace T3Monitor\T3monitoringClient;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use Exception;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use T3Monitor\T3monitoringClient\Provider\DataProviderInterface;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Http\Response;
+use TYPO3\CMS\Core\Http\Uri;
+use TYPO3\CMS\Core\Site\Entity\NullSite;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\HttpUtility;
 use TYPO3\CMS\Core\Core\Bootstrap;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * Class Client
@@ -24,14 +30,22 @@ class Client
 
     /**
      * Entry point
-     * @throws \Exception
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
      */
-    public function run()
+    public function run(ServerRequestInterface $request): ResponseInterface
     {
         $settings = $this->getSettings();
 
-        if (!$this->checkAccess()) {
-            HttpUtility::setResponseCodeAndExit(HttpUtility::HTTP_STATUS_403);
+        $response = GeneralUtility::makeInstance(Response::class);
+        $error = $this->checkAccess($request);
+        if ($error) {
+            $response = $response->withStatus(403);
+            if (!empty($settings['enableDebugForErrors'])) {
+                $response->getBody()->write($error);
+            }
+            return $response;
         }
 
         Bootstrap::initializeBackendRouter();
@@ -42,25 +56,27 @@ class Client
 
         // Generate json
         if ($output = json_encode($data)) {
-            header('Content-Type: application/json; charset=utf-8');
-            echo $output;
+            $response = $response->withHeader('Content-Type', 'application/json; charset=utf-8');
+            $response->getBody()->write($output);
+
         } else {
-            if (isset($settings['enableDebugForErrors']) && (int)$settings['enableDebugForErrors'] === 1) {
-                echo 'ERROR: Problems while encoding Json';
+            $response = $response->withStatus(403);
+            if (!empty($settings['enableDebugForErrors'])) {
+                $response->getBody()->write('ERROR: Problems while encoding Json');
             }
-            HttpUtility::setResponseCodeAndExit(HttpUtility::HTTP_STATUS_403);
         }
+        return $response;
     }
 
     /**
      * Convert array to UTF-8
      *
-     * @param $array
+     * @param string[] $array
      * @return array
      */
-    protected function utf8Converter($array)
+    protected function utf8Converter(array $array)
     {
-        array_walk_recursive($array, function (&$item, $key) {
+        array_walk_recursive($array, function (&$item) {
             if (!mb_detect_encoding($item, 'utf-8', true)) {
                 $item = utf8_encode($item);
             }
@@ -77,11 +93,18 @@ class Client
     protected function collectData()
     {
         $data = [];
-        $classes = (array)$GLOBALS['TYPO3_CONF_VARS']['EXT']['t3monitoring_client']['provider'];
+        $classes = (array)$GLOBALS['TYPO3_CONF_VARS']['EXT']['t3monitoring_client']['provider'] ?? [];
 
         if (empty($classes)) {
             $data['error'] = 'No providers';
         } else {
+            $isv10 = VersionNumberUtility::convertVersionNumberToInteger('10.0') <= VersionNumberUtility::convertVersionNumberToInteger(TYPO3_branch);
+            if ($isv10) {
+                // create a dummy TSFE as it is injected into ContentObjectRenderer, which is used indirectly by status reports
+                $siteLanguage = new SiteLanguage(0, 'en_US', new Uri(), []);
+                $GLOBALS['TSFE'] = GeneralUtility::makeInstance(TypoScriptFrontendController::class, null, new NullSite(), $siteLanguage);
+            }
+
             foreach ($classes as $class) {
                 /** @var DataProviderInterface $call */
                 $call = GeneralUtility::makeInstance($class);
@@ -98,40 +121,32 @@ class Client
     /**
      * Check if access is allowed to the endpoint
      *
-     * @return bool
-     * @throws \Exception
+     * @param ServerRequestInterface $request
+     * @return string
      */
-    protected function checkAccess(): bool
+    protected function checkAccess(ServerRequestInterface $request): string
     {
         $settings = $this->getSettings();
 
-        try {
-            // secret
-            if (isset($settings['secret']) && !empty($settings['secret']) && strlen($settings['secret']) >= 5) {
-                $secret = GeneralUtility::_GET('secret');
-                if ($secret !== $settings['secret']) {
-                    throw new Exception(sprintf('Secret wrong, provided was "%s"', $secret));
-                }
-            } else {
-                throw new Exception('No secret or too small secret defined');
+        // secret
+        if (!empty($settings['secret']) && strlen($settings['secret']) >= 5) {
+            $secret = $request->getQueryParams()['secret'] ?? '';
+            if ($secret !== $settings['secret']) {
+                return sprintf('Secret wrong, provided was "%s"', $secret);
             }
-
-            if (!isset($settings['allowedIps']) || empty($settings['allowedIps'])) {
-                throw new Exception('No allowed ips defined');
-            }
-            $remoteIp = GeneralUtility::getIndpEnv('REMOTE_ADDR');
-            if (!GeneralUtility::cmpIP($remoteIp, $settings['allowedIps'])) {
-                throw new Exception(sprintf('IP comparison failed, remote IP: %s!', $remoteIp));
-            }
-        } catch (Exception $e) {
-            if (isset($settings['enableDebugForErrors']) && (int)$settings['enableDebugForErrors'] === 1) {
-                echo('ERROR: ' . htmlspecialchars($e->getMessage()));
-                HttpUtility::setResponseCodeAndExit(HttpUtility::HTTP_STATUS_403);
-            }
-            return false;
+        } else {
+            return 'No secret or too small secret defined';
         }
 
-        return true;
+        if (!isset($settings['allowedIps']) || empty($settings['allowedIps'])) {
+            return 'No allowed ips defined';
+        }
+        $remoteIp = GeneralUtility::getIndpEnv('REMOTE_ADDR');
+        if (!GeneralUtility::cmpIP($remoteIp, $settings['allowedIps'])) {
+            return sprintf('IP comparison failed, remote IP: %s!', $remoteIp);
+        }
+
+        return '';
     }
 
     protected function getSettings(): array
@@ -147,6 +162,3 @@ class Client
         return $configuration;
     }
 }
-
-$client = GeneralUtility::makeInstance(Client::class);
-$client->run();

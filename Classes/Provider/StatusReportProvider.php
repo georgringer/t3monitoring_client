@@ -31,7 +31,7 @@ class StatusReportProvider implements DataProviderInterface
     {
         if (ExtensionManagementUtility::isLoaded('reports')) {
             $this->initialize();
-            $statusReport = GeneralUtility::makeInstance(\TYPO3\CMS\Reports\Report\Status\Status::class);
+            $statusReport = GeneralUtility::makeInstance(Stati\Status::class);
             $statusCollection = $statusReport->getSystemStatus();
 
             $severityConversion = [
@@ -67,7 +67,7 @@ class StatusReportProvider implements DataProviderInterface
         }
 
         $skippedReports = [
-            \TYPO3\CMS\Install\Report\InstallStatusReport::class
+            InstallStatusReport::class
         ];
 
         foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers'] as $provider => $providerStati) {
@@ -83,7 +83,7 @@ class StatusReportProvider implements DataProviderInterface
     }
 
     /**
-     * @return \TYPO3\CMS\Lang\LanguageService
+     * @return LanguageService
      */
     protected function getLanguageService(): LanguageService
     {

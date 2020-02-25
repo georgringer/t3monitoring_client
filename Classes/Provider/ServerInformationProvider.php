@@ -9,6 +9,7 @@ namespace T3Monitor\T3monitoringClient\Provider;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -22,6 +23,7 @@ class ServerInformationProvider implements DataProviderInterface
     /**
      * @param array $data
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function get(array $data)
     {
@@ -29,9 +31,9 @@ class ServerInformationProvider implements DataProviderInterface
         $data['core']['typo3Version'] = TYPO3_version;
         $data['core']['phpVersion'] = substr(phpversion(), 0, strpos(phpversion() . '-', '-'));
         $data['core']['mysqlClientVersion'] = $connection->getServerVersion();
-        $data['core']['diskTotalSpace'] = disk_total_space(PATH_site);
-        $data['core']['diskFreeSpace'] = disk_free_space(PATH_site);
-        $data['core']['applicationContext'] = (string)GeneralUtility::getApplicationContext();
+        $data['core']['diskTotalSpace'] = disk_total_space(Environment::getProjectPath());
+        $data['core']['diskFreeSpace'] = disk_free_space(Environment::getProjectPath());
+        $data['core']['applicationContext'] = (string)Environment::getContext();
         return $data;
     }
 }
