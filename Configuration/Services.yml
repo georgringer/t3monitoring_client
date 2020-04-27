@@ -1,0 +1,6 @@
+services:
+  T3Monitor\T3monitoringClient\Slots\ExtensionManagerListener:
+    tags:
+      - name: event.listener
+        identifier: 'afterExtensionInstall'
+        event: TYPO3\CMS\Core\Package\Event\AfterPackageActivationEvent

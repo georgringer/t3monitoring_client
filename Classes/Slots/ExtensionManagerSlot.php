@@ -13,9 +13,6 @@ use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Crypto\Random;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/**
- * Class ExtensionManagerSlot
- */
 class ExtensionManagerSlot
 {
     const SECRET_LENGTH = 50;
