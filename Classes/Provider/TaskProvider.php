@@ -32,7 +32,8 @@ class TaskProvider implements DataProviderInterface
             ->select('uid', 'description', 'nextexecution', 'lastexecution_time', 'lastexecution_failure', 'lastexecution_context')
             ->from('tx_scheduler_task')
             ->where(
-                $qb->expr()->eq('disable', $qb->createNamedParameter(0, \PDO::PARAM_INT))
+                $qb->expr()->eq('disable', $qb->createNamedParameter(0, \PDO::PARAM_INT)),
+                $qb->expr()->eq('deleted', $qb->createNamedParameter(0, \PDO::PARAM_INT))
             )
             ->execute();
         while ($row = $statement->fetch()) {
