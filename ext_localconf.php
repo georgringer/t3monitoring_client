@@ -7,6 +7,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXT']['t3monitoring_client']['provider'][] = \T3Mon
 $GLOBALS['TYPO3_CONF_VARS']['EXT']['t3monitoring_client']['provider'][] = \T3Monitor\T3monitoringClient\Provider\ServerInformationProvider::class;
 $GLOBALS['TYPO3_CONF_VARS']['EXT']['t3monitoring_client']['provider'][] = \T3Monitor\T3monitoringClient\Provider\ComposerInformationProvider::class;
 $GLOBALS['TYPO3_CONF_VARS']['EXT']['t3monitoring_client']['provider'][] = \T3Monitor\T3monitoringClient\Provider\ExtensionProvider::class;
+$GLOBALS['TYPO3_CONF_VARS']['EXT']['t3monitoring_client']['provider'][] = \T3Monitor\T3monitoringClient\Provider\TaskProvider::class;
 
 // register to old slot if PSR-14 event is not present
 if (!class_exists(TYPO3\CMS\Core\Package\Event\AfterPackageActivationEvent::class)) {
