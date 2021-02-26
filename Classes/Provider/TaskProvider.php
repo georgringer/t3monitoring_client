@@ -29,7 +29,7 @@ class TaskProvider implements DataProviderInterface
     {
         $qb = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_scheduler_task');
         $statement = $qb
-            ->select('uid', 'description', 'nextexecution', 'lastexecution_time', 'lastexecution_failure', 'lastexecution_context')
+            ->select('uid', 'description', 'nextexecution', 'lastexecution_time', 'lastexecution_failure', 'lastexecution_context', 'serialized_task_object')
             ->from('tx_scheduler_task')
             ->where(
                 $qb->expr()->eq('disable', $qb->createNamedParameter(0, \PDO::PARAM_INT)),
