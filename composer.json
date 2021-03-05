@@ -11,5 +11,10 @@
     "psr-4": {
       "T3Monitor\\T3monitoringClient\\": "Classes"
     }
-  }
+  },
+  "extra": {
+      "typo3/cms": {
+         "extension-key": "t3monitoring_client"
+      }
+   }
 }
