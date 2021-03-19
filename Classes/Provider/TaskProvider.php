@@ -53,7 +53,6 @@ class TaskProvider implements DataProviderInterface
      */
     private function unserializeTask($row)
     {
-        // Set properties according to unserialized object
         $task= unserialize($row['serialized_task_object']);
         $class = get_class($task);
         if ($class === \__PHP_Incomplete_Class::class && preg_match('/^O:[0-9]+:"(?P<classname>.+?)"/', $row['serialized_task_object'], $matches) === 1) {
@@ -65,12 +64,10 @@ class TaskProvider implements DataProviderInterface
         $row['cronCmd'] = $task->getExecution()->getCronCmd();
         $row['multiple'] = intval($task->getExecution()->getMultiple());
 
-        // Check for 'null'
         if ($row['lastexecution_failure'] == null) {
             $row['lastexecution_failure'] = '';
         }
 
-        // Set frequency according to "interval" or "cron" command
         if (!empty($row['interval']) || !empty($row['cronCmd'])) {
             $row['type'] = AbstractTask::TYPE_RECURRING;
             $row['frequency'] = $row['interval'] ?: $row['cronCmd'];
