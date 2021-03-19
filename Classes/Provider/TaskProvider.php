@@ -77,6 +77,12 @@ class TaskProvider implements DataProviderInterface
         }
         unset($row['cronCmd'], $row['interval']);
 
+        if ($row['nextexecution'] < $GLOBALS['EXEC_TIME']) {
+            $row['late'] = true;
+        } else {
+            $row['late'] = false;
+        }
+
         return $row;
     }
 }
