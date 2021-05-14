@@ -7,3 +7,12 @@ allowedIps = *
 
 # cat=features/enable/3; type=boolean; label=Enable debugging: Instead of silently stopping the endpoint call, the error is outputted. Just enable this to debug if a connection is not possible!
 enableDebugForErrors = 0
+
+# cat=features/enable/4; type=string; label=Path to users private key file, eg. ~/.ssh/id_rsa
+privateKeyFile = ~/.ssh/id_rsa
+
+# cat=features/enable/5; type=boolean; label=Enable the private key file secure transport
+enableSSLsecuredConnection = 0
+
+# cat=features/enable/6; type=string; label=Cipher for secure transport
+openSSLcipher = aes-256-gcm
