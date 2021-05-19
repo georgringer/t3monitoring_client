@@ -13,12 +13,14 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use T3Monitor\T3monitoringClient\Provider\DataProviderInterface;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Core\Bootstrap;
+use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\Response;
+use TYPO3\CMS\Core\Http\ServerRequestFactory;
 use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Site\Entity\NullSite;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
@@ -103,6 +105,12 @@ class Client
                 // create a dummy TSFE as it is injected into ContentObjectRenderer, which is used indirectly by status reports
                 $siteLanguage = new SiteLanguage(0, 'en_US', new Uri(), []);
                 $GLOBALS['TSFE'] = GeneralUtility::makeInstance(TypoScriptFrontendController::class, null, new NullSite(), $siteLanguage);
+            }
+
+            // Since 10.4.16, the internal ExtensionProvider requires a request
+            if (!($GLOBALS['TYPO3_REQUEST'] ?? null)) {
+                $request = ServerRequestFactory::fromGlobals();
+                $GLOBALS['TYPO3_REQUEST'] = $request->withAttribute('normalizedParams', NormalizedParams::createFromRequest($request));
             }
 
             foreach ($classes as $class) {
