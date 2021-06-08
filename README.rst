@@ -29,6 +29,10 @@ allowedIps
 """"""""""
 Define a comma separated list of IPs which are allowed to fetch the client data.
 
+allowedDomains
+""""""""""
+Define a comma separated list of domains which are allowed to fetch the client data.
+
 enableDebugForErrors
 """"""""""""""""""""
 If set, the errors are outputted if you call `http://yourdomain.tld/?eID=t3monitoring&secret=<yoursecret>`. This can help to identify problems.
