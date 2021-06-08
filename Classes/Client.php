@@ -149,12 +149,57 @@ class Client
         if (!isset($settings['allowedIps']) || empty($settings['allowedIps'])) {
             return 'No allowed ips defined';
         }
+        if (!isset($settings['allowedDomains']) || empty($settings['allowedDomains'])) {
+            return 'No allowed domains defined';
+        }
+
+        $allowedIps = $this->getAllowedIps($settings['allowedIps'], $settings['allowedDomains']);
+
         $remoteIp = GeneralUtility::getIndpEnv('REMOTE_ADDR');
-        if (!GeneralUtility::cmpIP($remoteIp, $settings['allowedIps'])) {
+        if (!GeneralUtility::cmpIP($remoteIp, $allowedIps)) {
             return sprintf('IP comparison failed, remote IP: %s!', $remoteIp);
         }
 
         return '';
+    }
+
+    /**
+     * Parses the allowed domains and IPs from the extension settings into a single allowed IPs string
+     * @return string The allowed ips, comma separated.
+     */
+    public function getAllowedIps(string $allowedIps, string $allowedDomains): string
+    {
+        $allowedIps = trim($allowedIps);
+        $allowedDomains = trim($allowedDomains);
+
+        /* Return * when anything is allowed in both fields */
+        if($allowedIps === '*' && $allowedDomains === '*') {
+            return '*';
+        }
+
+        $allowedIpsResult = '';
+        if($allowedIps !== '*' && !empty($allowedIps)) {
+            $allowedIpsResult .= $allowedIps;
+        }
+
+        /* Convert the domain names to IP addresses */
+        if($allowedDomains !== '*' && !empty($allowedDomains)) {
+            $allowedDomainsArray = explode(',', $allowedDomains);
+            $allowedIpsResult .= ', ';
+            foreach ($allowedDomainsArray as $allowedDomain) {
+                $resultIp4 = dns_get_record($allowedDomain, DNS_A);
+                if(isset($resultIp4[0]['ip'])) {
+                    $allowedIpsResult .= sprintf('%s, ', $resultIp4[0]['ip']);
+                }
+                $resultIp6 = dns_get_record($allowedDomain, DNS_AAAA);
+                if(isset($resultIp6[0]['ipv6'])) {
+                    $allowedIpsResult .= sprintf('%s, ', $resultIp6[0]['ipv6']);
+                }
+            }
+        }
+
+        /* Return concatenated IPs and domains IPs */
+        return trim($allowedIpsResult, ' ,');
     }
 
     protected function getSettings(): array
