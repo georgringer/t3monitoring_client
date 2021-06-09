@@ -146,11 +146,9 @@ class Client
             return 'No secret or too small secret defined';
         }
 
-        if (!isset($settings['allowedIps']) || empty($settings['allowedIps'])) {
-            return 'No allowed ips defined';
-        }
-        if (!isset($settings['allowedDomains']) || empty($settings['allowedDomains'])) {
-            return 'No allowed domains defined';
+        /* Only returns an error when both are empty */
+        if (empty($settings['allowedIps']) && empty($settings['allowedDomains'])) {
+            return 'No allowed ips or domains defined';
         }
 
         $allowedIps = $this->getAllowedIps($settings['allowedIps'], $settings['allowedDomains']);
@@ -172,28 +170,33 @@ class Client
         $allowedIps = trim($allowedIps);
         $allowedDomains = trim($allowedDomains);
 
-        /* Return * when anything is allowed in both fields */
-        if($allowedIps === '*' && $allowedDomains === '*') {
+        /* Return * when anything is allowed in one field, and the other is empty */
+        if (($allowedIps === '*' && $allowedDomains === '*') ||
+            ($allowedIps === '*' && empty($allowedDomains)) ||
+            (empty($allowedIps) && $allowedDomains === '*')) {
             return '*';
         }
 
         $allowedIpsResult = '';
         if($allowedIps !== '*' && !empty($allowedIps)) {
-            $allowedIpsResult .= $allowedIps;
+            $allowedIpsResult = sprintf('%s, ', $allowedIps);
         }
 
         /* Convert the domain names to IP addresses */
         if($allowedDomains !== '*' && !empty($allowedDomains)) {
             $allowedDomainsArray = explode(',', $allowedDomains);
-            $allowedIpsResult .= ', ';
             foreach ($allowedDomainsArray as $allowedDomain) {
-                $resultIp4 = dns_get_record($allowedDomain, DNS_A);
-                if(isset($resultIp4[0]['ip'])) {
-                    $allowedIpsResult .= sprintf('%s, ', $resultIp4[0]['ip']);
+                $resultsIpv4 = dns_get_record($allowedDomain, DNS_A);
+                foreach ($resultsIpv4 as $resultIpv4) {
+                    if(isset($resultIpv4['ip'])) {
+                        $allowedIpsResult .= sprintf('%s, ', $resultIpv4['ip']);
+                    }
                 }
-                $resultIp6 = dns_get_record($allowedDomain, DNS_AAAA);
-                if(isset($resultIp6[0]['ipv6'])) {
-                    $allowedIpsResult .= sprintf('%s, ', $resultIp6[0]['ipv6']);
+                $resultsIpv6 = dns_get_record($allowedDomain, DNS_AAAA);
+                foreach ($resultsIpv6 as $resultIpv6) {
+                    if(isset($resultIpv6['ipv6'])) {
+                        $allowedIpsResult .= sprintf('%s, ', $resultIpv6['ipv6']);
+                    }
                 }
             }
         }

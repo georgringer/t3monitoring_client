@@ -3,7 +3,6 @@
 use PHPUnit\Framework\TestCase;
 use T3Monitor\T3monitoringClient\Client;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Mvc\Controller\Exception\RequiredArgumentMissingException;
 
 class ClientTest extends TestCase
 {
@@ -22,13 +21,58 @@ class ClientTest extends TestCase
 
     /**
      * @test
-     * @throws RequiredArgumentMissingException
      */
     public function testInputIpsAndDomainsStarsReturnOneStarOnly()
     {
         $allowedIps = '*';
         $allowedDomains = '*';
         $this->assertEquals('*', $this->client->getAllowedIps($allowedIps, $allowedDomains));
+
+        $allowedIps = '*';
+        $allowedDomains = '';
+        $this->assertEquals('*', $this->client->getAllowedIps($allowedIps, $allowedDomains));
+
+        $allowedIps = '';
+        $allowedDomains = '*';
+        $this->assertEquals('*', $this->client->getAllowedIps($allowedIps, $allowedDomains));
+    }
+
+    /**
+     * @test
+     */
+    public function testValuesHasPriorityOverStarOverEmpty()
+    {
+        $allowedIps = '78.47.171.202, 142.250.184.206';
+        $allowedDomains = '*';
+        /* Expect the IPs to be returned */
+        $this->assertCount(
+            2,
+            explode(',', $this->client->getAllowedIps($allowedIps, $allowedDomains))
+        );
+
+        $allowedIps = '78.47.171.202, 142.250.184.206';
+        $allowedDomains = '';
+        /* Expect the IPs to be returned */
+        $this->assertCount(
+            2,
+            explode(',', $this->client->getAllowedIps($allowedIps, $allowedDomains))
+        );
+
+        $allowedIps = '*';
+        $allowedDomains = 'www.google.com, www.beech.it';
+        /* Expect the IPs from the domains to be returned */
+        $this->assertGreaterThanOrEqual(
+            2,
+            explode(',', $this->client->getAllowedIps($allowedIps, $allowedDomains))
+        );
+
+        $allowedIps = '';
+        $allowedDomains = 'www.google.com, www.beech.it';
+        /* Expect the IPs from the domains to be returned */
+        $this->assertGreaterThanOrEqual(
+            2,
+            explode(',', $this->client->getAllowedIps($allowedIps, $allowedDomains))
+        );
     }
 
     /**
@@ -39,9 +83,9 @@ class ClientTest extends TestCase
         $allowedIps = '';
         $allowedDomains = 'www.google.com';
 
-        /* Expect 2 IPs to be returned; one IPv4 and one IPv6 */
+        /* Expect the IPs to be returned */
         $this->assertGreaterThanOrEqual(
-            2,
+            1,
             explode(',', $this->client->getAllowedIps($allowedIps, $allowedDomains))
         );
     }
@@ -54,7 +98,7 @@ class ClientTest extends TestCase
         $allowedIps = '78.47.171.202, 142.250.184.206';
         $allowedDomains = 'www.google.com, www.beech.it';
 
-        /* Expect 4 or more IPs (depending on IPv6 implementation) to be returned */
+        /* Expect 4 or more IPs (depending on IPv6 implementation and ) to be returned */
         $this->assertGreaterThanOrEqual(
             4,
             explode(',', $this->client->getAllowedIps($allowedIps, $allowedDomains))
