@@ -137,7 +137,7 @@ class ClientTest extends TestCase
     public function testExpectBogusDomainNamesToNotBeProcessed()
     {
         $allowedIps = '78.47.171.202, 142.250.184.206';
-        $allowedDomains = 'com.google.www, it.beech.www';
+        $allowedDomains = 'com.google.www, it.beech.www, beech@beech.com, www,beech,it, www/beech/it, jksdafjsdnidmfhsnbsdfkjnjuhasghdsn.nl';
 
         $this->assertCount(
             2,

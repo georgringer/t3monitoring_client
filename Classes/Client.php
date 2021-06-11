@@ -186,13 +186,19 @@ class Client
         if($allowedDomains !== '*' && !empty($allowedDomains)) {
             $allowedDomainsArray = explode(',', $allowedDomains);
             foreach ($allowedDomainsArray as $allowedDomain) {
-                $resultsIpv4 = dns_get_record($allowedDomain, DNS_A);
+                $resultsIpv4 = @dns_get_record($allowedDomain, DNS_A);
+                if(!$resultsIpv4) {
+                    continue;
+                }
                 foreach ($resultsIpv4 as $resultIpv4) {
                     if(isset($resultIpv4['ip'])) {
                         $allowedIpsResult .= sprintf('%s, ', $resultIpv4['ip']);
                     }
                 }
-                $resultsIpv6 = dns_get_record($allowedDomain, DNS_AAAA);
+                $resultsIpv6 = @dns_get_record($allowedDomain, DNS_AAAA);
+                if(!$resultsIpv6) {
+                    continue;
+                }
                 foreach ($resultsIpv6 as $resultIpv6) {
                     if(isset($resultIpv6['ipv6'])) {
                         $allowedIpsResult .= sprintf('%s, ', $resultIpv6['ipv6']);
