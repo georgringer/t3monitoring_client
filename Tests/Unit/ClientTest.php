@@ -59,7 +59,7 @@ class ClientTest extends TestCase
         );
 
         $allowedIps = '*';
-        $allowedDomains = 'www.google.com, www.beech.it';
+        $allowedDomains = 'www.google.com, www.test.io';
         /* Expect the IPs from the domains to be returned */
         $this->assertGreaterThanOrEqual(
             2,
@@ -67,7 +67,7 @@ class ClientTest extends TestCase
         );
 
         $allowedIps = '';
-        $allowedDomains = 'www.google.com, www.beech.it';
+        $allowedDomains = 'www.google.com, www.test.io';
         /* Expect the IPs from the domains to be returned */
         $this->assertGreaterThanOrEqual(
             2,
@@ -96,7 +96,7 @@ class ClientTest extends TestCase
     public function testInputIpsAndDomainsReturnsBothConcatenated()
     {
         $allowedIps = '78.47.171.202, 142.250.184.206';
-        $allowedDomains = 'www.google.com, www.beech.it';
+        $allowedDomains = 'www.google.com, www.test.io';
 
         /* Expect 4 or more IPs (depending on IPv6 implementation and ) to be returned */
         $this->assertGreaterThanOrEqual(
@@ -137,7 +137,7 @@ class ClientTest extends TestCase
     public function testExpectBogusDomainNamesToNotBeProcessed()
     {
         $allowedIps = '78.47.171.202, 142.250.184.206';
-        $allowedDomains = 'com.google.www, it.beech.www, beech@beech.com, www,beech,it, www/beech/it, jksdafjsdnidmfhsnbsdfkjnjuhasghdsn.nl';
+        $allowedDomains = 'com.google.www, io.test.www, test@test.com, www,test,io, www/test/io, jksdafjsdnidmfhsnbsdfkjnjuhasghdsn.nl';
 
         $this->assertCount(
             2,
