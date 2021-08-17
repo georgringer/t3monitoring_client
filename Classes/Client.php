@@ -104,8 +104,8 @@ class Client
         if (empty($classes)) {
             $data['error'] = 'No providers';
         } else {
-            $isv10 = VersionNumberUtility::convertVersionNumberToInteger('10.0') <= VersionNumberUtility::convertVersionNumberToInteger(TYPO3_branch);
-            if ($isv10) {
+            $isv11 = VersionNumberUtility::convertVersionNumberToInteger('11.0') <= VersionNumberUtility::convertVersionNumberToInteger(TYPO3_branch);
+            if ($isv11) {
                 // create a dummy TSFE as it is injected into ContentObjectRenderer, which is used indirectly by status reports
                 $siteLanguage = new SiteLanguage(0, 'en_US', new Uri(), []);
                 $GLOBALS['TSFE'] = GeneralUtility::makeInstance(
