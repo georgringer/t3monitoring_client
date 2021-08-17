@@ -41,8 +41,7 @@ class ExtensionProvider implements DataProviderInterface
             if (is_dir(Environment::getBackendPath() . '/sysext/' . $key . '/')) {
                 continue;
             }
-
-            $data['extensions'][$key] = $hasNewEmConfApi ? $emConfUtility->includeEmConf($key, $f) : $emConfUtility->includeEmConf($f);
+            $data['extensions'][$key] = $hasNewEmConfApi ? $emConfUtility->includeEmConf($key, $f['packagePath']) : $emConfUtility->includeEmConf($f['packagePath']);
             $data['extensions'][$key]['isLoaded'] = (int)ExtensionManagementUtility::isLoaded($key);
         }
 

@@ -13,16 +13,20 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use T3Monitor\T3monitoringClient\Provider\DataProviderInterface;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\ServerRequestFactory;
 use TYPO3\CMS\Core\Http\Uri;
+use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Site\Entity\NullSite;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 
 /**
  * Class Client
@@ -104,13 +108,20 @@ class Client
             if ($isv10) {
                 // create a dummy TSFE as it is injected into ContentObjectRenderer, which is used indirectly by status reports
                 $siteLanguage = new SiteLanguage(0, 'en_US', new Uri(), []);
-                $GLOBALS['TSFE'] = GeneralUtility::makeInstance(TypoScriptFrontendController::class, null, new NullSite(), $siteLanguage);
-            }
+                $GLOBALS['TSFE'] = GeneralUtility::makeInstance(
+                    TypoScriptFrontendController::class,
+                    GeneralUtility::makeInstance(Context::class),
+                    new NullSite(),
+                    $siteLanguage,
+                    new PageArguments(0, '0', []),
+                    GeneralUtility::makeInstance(FrontendUserAuthentication::class)
+                );            }
 
             // Since 10.4.16, the internal ExtensionProvider requires a request
             if (!($GLOBALS['TYPO3_REQUEST'] ?? null)) {
                 $request = ServerRequestFactory::fromGlobals();
                 $GLOBALS['TYPO3_REQUEST'] = $request->withAttribute('normalizedParams', NormalizedParams::createFromRequest($request));
+                $GLOBALS['TYPO3_REQUEST'] =  $request->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_FE);
             }
 
             foreach ($classes as $class) {
