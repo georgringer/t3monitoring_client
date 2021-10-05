@@ -54,7 +54,9 @@ class Client
             return $response;
         }
 
-        Bootstrap::initializeBackendRouter();
+        if(method_exists(Bootstrap::class,'initializeBackendRouter')) {
+            Bootstrap::initializeBackendRouter();
+        }
         Bootstrap::loadExtTables();
 
         $data = $this->collectData();
