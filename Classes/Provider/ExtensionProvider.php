@@ -32,8 +32,7 @@ class ExtensionProvider implements DataProviderInterface
     {
         $isv11 = VersionNumberUtility::convertVersionNumberToInteger('11.2') < VersionNumberUtility::convertVersionNumberToInteger(TYPO3_branch);
         $isv10 = VersionNumberUtility::convertVersionNumberToInteger('10.2') < VersionNumberUtility::convertVersionNumberToInteger(TYPO3_branch);
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $listUtility = $objectManager->get(ListUtility::class);
+        $listUtility = GeneralUtility::makeInstance(ListUtility::class);
 
         $allExtensions = $listUtility->getAvailableExtensions();
 
