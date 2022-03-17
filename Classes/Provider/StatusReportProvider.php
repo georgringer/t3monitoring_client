@@ -87,7 +87,7 @@ class StatusReportProvider implements DataProviderInterface
      */
     protected function getLanguageService(): LanguageService
     {
-        if ($GLOBALS['LANG'] === null) {
+        if (!isset($GLOBALS['LANG'])) {
             $GLOBALS['LANG'] = GeneralUtility::makeInstance(LanguageService::class);
         }
         return $GLOBALS['LANG'];
