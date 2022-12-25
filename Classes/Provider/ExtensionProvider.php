@@ -44,7 +44,19 @@ class ExtensionProvider implements DataProviderInterface
             }
 
             if ($isv11) {
-                $data['extensions'][$key] = $emConfUtility->includeEmConf($key, $f['packagePath']);
+                // Try loading extension data from EmConf
+                $extensionData = $emConfUtility->includeEmConf($key, $f['packagePath']);
+                if (!$extensionData) {
+                    // Fallback to loading extension information from the extension itself.
+                    // FIXME: The ListUtility from TYPO3 currently does not provide the following information:
+                    //          - author
+                    //          - constraints
+                    //          - category
+                    //          - description (composer descriptions gets the title)
+                    $extensionData = $f;
+                }
+
+                $data['extensions'][$key] = $extensionData;
             } elseif ($isv10) {
                 $data['extensions'][$key] = $emConfUtility->includeEmConf($key, $f);
             } else {
