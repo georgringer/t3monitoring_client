@@ -12,7 +12,9 @@
       "T3Monitor\\T3monitoringClient\\": "Classes"
     }
   },
-  "replace": {
-    "t3monitoring_client": "*"
-  }
+  "extra": {
+      "typo3/cms": {
+         "extension-key": "t3monitoring_client"
+      }
+   }
 }
