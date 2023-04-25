@@ -64,6 +64,14 @@ class Client
 
         // Generate json
         if ($output = json_encode($data)) {
+            if (
+                extension_loaded('openssl')
+                && $settings['enableSSLsecuredConnection']
+                && is_file($settings['privateKeyFile'])
+                && in_array($settings, openssl_get_cipher_methods())
+            ) {
+                $output = openssl_encrypt($output, $settings['openSSLcipher'], $settings['privateKeyFile']);
+            }
             $response = $response->withHeader('Content-Type', 'application/json; charset=utf-8');
             $response->getBody()->write($output);
 
