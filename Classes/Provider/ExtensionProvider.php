@@ -8,12 +8,9 @@ namespace T3Monitor\T3monitoringClient\Provider;
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  */
-
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extensionmanager\Utility\EmConfUtility;
 use TYPO3\CMS\Extensionmanager\Utility\ListUtility;
 
@@ -30,27 +27,17 @@ class ExtensionProvider implements DataProviderInterface
      */
     public function get(array $data)
     {
-        $isv11 = VersionNumberUtility::convertVersionNumberToInteger('11.2') < VersionNumberUtility::convertVersionNumberToInteger(TYPO3_branch);
-        $isv10 = VersionNumberUtility::convertVersionNumberToInteger('10.2') < VersionNumberUtility::convertVersionNumberToInteger(TYPO3_branch);
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $listUtility = $objectManager->get(ListUtility::class);
+        $listUtility = GeneralUtility::makeInstance(ListUtility::class);
 
         $allExtensions = $listUtility->getAvailableExtensions();
 
         $emConfUtility = GeneralUtility::makeInstance(EmConfUtility::class);
         foreach ($allExtensions as $key => $f) {
-            if (is_dir(Environment::getBackendPath() . '/sysext/' . $key . '/')) {
+            $extensionConfig = $emConfUtility->includeEmConf($key, $f['packagePath']);
+            if ( $extensionConfig['type'] === 'System') {
                 continue;
             }
-
-            if ($isv11) {
-                $data['extensions'][$key] = $emConfUtility->includeEmConf($key, $f['packagePath']);
-            } elseif ($isv10) {
-                $data['extensions'][$key] = $emConfUtility->includeEmConf($key, $f);
-            } else {
-                $data['extensions'][$key] = $emConfUtility->includeEmConf($f);
-            }
-
+            $data['extensions'][$key] = $extensionConfig;
             $data['extensions'][$key]['isLoaded'] = (int)ExtensionManagementUtility::isLoaded($key);
         }
 

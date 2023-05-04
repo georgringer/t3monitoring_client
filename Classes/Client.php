@@ -8,7 +8,7 @@ namespace T3Monitor\T3monitoringClient;
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  */
-
+use TYPO3\CMS\Core\Information\Typo3Version;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use T3Monitor\T3monitoringClient\Provider\DataProviderInterface;
@@ -63,7 +63,7 @@ class Client
         $data = $this->utf8Converter($data);
 
         // Generate json
-        if ($output = json_encode($data)) {
+        if ($output = json_encode($data, JSON_THROW_ON_ERROR)) {
             $response = $response->withHeader('Content-Type', 'application/json; charset=utf-8');
             $response->getBody()->write($output);
 
@@ -106,7 +106,7 @@ class Client
         if (empty($classes)) {
             $data['error'] = 'No providers';
         } else {
-            $isv10 = VersionNumberUtility::convertVersionNumberToInteger('10.0') <= VersionNumberUtility::convertVersionNumberToInteger(TYPO3_branch);
+            $isv10 = VersionNumberUtility::convertVersionNumberToInteger('10.0') <= VersionNumberUtility::convertVersionNumberToInteger(GeneralUtility::makeInstance(Typo3Version::class)->getBranch());
             if ($isv10) {
                 // create a dummy TSFE as it is injected into ContentObjectRenderer, which is used indirectly by status reports
                 $siteLanguage = new SiteLanguage(0, 'en_US', new Uri(), []);

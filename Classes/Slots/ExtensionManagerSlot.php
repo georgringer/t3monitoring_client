@@ -15,7 +15,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ExtensionManagerSlot
 {
-    const SECRET_LENGTH = 50;
+    public const SECRET_LENGTH = 50;
 
     /** @var ExtensionConfiguration */
     protected $extensionConfiguration;
@@ -45,7 +45,7 @@ class ExtensionManagerSlot
                 $secret = $this->random->generateRandomHexString(self::SECRET_LENGTH);
                 $configuration['secret'] = $secret;
 
-                $this->extensionConfiguration->set($extensionKey, '', $configuration);
+                $this->extensionConfiguration->set($extensionKey, $configuration);
             }
         }
     }
