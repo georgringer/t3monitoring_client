@@ -106,20 +106,6 @@ class Client
         if (empty($classes)) {
             $data['error'] = 'No providers';
         } else {
-            $isv10 = VersionNumberUtility::convertVersionNumberToInteger('10.0') <= VersionNumberUtility::convertVersionNumberToInteger(GeneralUtility::makeInstance(Typo3Version::class)->getBranch());
-            if ($isv10) {
-                // create a dummy TSFE as it is injected into ContentObjectRenderer, which is used indirectly by status reports
-                $siteLanguage = new SiteLanguage(0, 'en_US', new Uri(), []);
-                $GLOBALS['TSFE'] = GeneralUtility::makeInstance(
-                    TypoScriptFrontendController::class,
-                    GeneralUtility::makeInstance(Context::class),
-                    new NullSite(),
-                    $siteLanguage,
-                    new PageArguments(0, '0', []),
-                    GeneralUtility::makeInstance(FrontendUserAuthentication::class)
-                );
-            }
-
             // Since 10.4.16, the internal ExtensionProvider requires a request
             if (!($GLOBALS['TYPO3_REQUEST'] ?? null)) {
                 $request = ServerRequestFactory::fromGlobals();

@@ -1,4 +1,11 @@
 services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  T3Monitor\T3monitoringClient\:
+    resource: '../Classes/*'
   T3Monitor\T3monitoringClient\Slots\ExtensionManagerListener:
     tags:
       - name: event.listener
