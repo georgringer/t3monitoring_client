@@ -14,7 +14,6 @@ namespace T3Monitor\T3monitoringClient\Provider;
  */
 class DummyDataProvider implements DataProviderInterface
 {
-
     /**
      * @param array $data
      * @return array

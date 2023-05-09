@@ -8,18 +8,16 @@ namespace T3Monitor\T3monitoringClient\Provider;
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  */
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 
 /**
  * Class ServerInformationProvider
  */
 class ServerInformationProvider implements DataProviderInterface
 {
-
     /**
      * @param array $data
      * @return array

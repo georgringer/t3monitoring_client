@@ -24,7 +24,6 @@ use TYPO3\CMS\Reports\Status;
  */
 class StatusReportProvider implements DataProviderInterface
 {
-
     /**
      * @param array $data
      * @return array
@@ -61,8 +60,6 @@ class StatusReportProvider implements DataProviderInterface
 
     /**
      * Initialize some code which is usually only available in backend context
-     *
-     * @return void
      */
     protected function initialize()
     {
@@ -72,10 +69,10 @@ class StatusReportProvider implements DataProviderInterface
         }
 
         $skippedReports = [
-            InstallStatusReport::class
+            InstallStatusReport::class,
         ];
 
-        foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers'] as $provider => $providerStati) {
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers'] as $provider => $providerStati) {
             $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers'][$provider] = array_diff($providerStati, $skippedReports);
         }
 

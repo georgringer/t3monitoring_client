@@ -16,7 +16,6 @@ use TYPO3\CMS\Core\Core\Environment;
  */
 class ComposerInformationProvider implements DataProviderInterface
 {
-
     /**
      * @param array $data
      * @return array

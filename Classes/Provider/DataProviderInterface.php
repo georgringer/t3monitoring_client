@@ -14,7 +14,6 @@ namespace T3Monitor\T3monitoringClient\Provider;
  */
 interface DataProviderInterface
 {
-
     /**
      * Collect data and return it
      *

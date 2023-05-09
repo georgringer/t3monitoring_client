@@ -8,7 +8,6 @@ namespace T3Monitor\T3monitoringClient\Provider;
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  */
-use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extensionmanager\Utility\EmConfUtility;
@@ -19,7 +18,6 @@ use TYPO3\CMS\Extensionmanager\Utility\ListUtility;
  */
 class ExtensionProvider implements DataProviderInterface
 {
-
     /**
      * @param array $data
      * @return array
@@ -34,7 +32,7 @@ class ExtensionProvider implements DataProviderInterface
         $emConfUtility = GeneralUtility::makeInstance(EmConfUtility::class);
         foreach ($allExtensions as $key => $f) {
             $extensionConfig = $emConfUtility->includeEmConf($key, $f['packagePath']);
-            if ( $extensionConfig['type'] === 'System') {
+            if ($extensionConfig['type'] === 'System') {
                 continue;
             }
             $data['extensions'][$key] = $extensionConfig;

@@ -8,32 +8,21 @@ namespace T3Monitor\T3monitoringClient;
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  */
-use TYPO3\CMS\Core\Information\Typo3Version;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use T3Monitor\T3monitoringClient\Provider\DataProviderInterface;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
-use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\ServerRequestFactory;
-use TYPO3\CMS\Core\Http\Uri;
-use TYPO3\CMS\Core\Routing\PageArguments;
-use TYPO3\CMS\Core\Site\Entity\NullSite;
-use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
-use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * Class Client
  */
 class Client
 {
-
     /**
      * Entry point
      *
@@ -54,7 +43,7 @@ class Client
             return $response;
         }
 
-        if(method_exists(Bootstrap::class,'initializeBackendRouter')) {
+        if (method_exists(Bootstrap::class, 'initializeBackendRouter')) {
             Bootstrap::initializeBackendRouter();
         }
         Bootstrap::loadExtTables();
@@ -66,7 +55,6 @@ class Client
         if ($output = json_encode($data, JSON_THROW_ON_ERROR)) {
             $response = $response->withHeader('Content-Type', 'application/json; charset=utf-8');
             $response->getBody()->write($output);
-
         } else {
             $response = $response->withStatus(403);
             if (!empty($settings['enableDebugForErrors'])) {
