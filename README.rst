@@ -2,11 +2,16 @@ TYPO3 CMS Extension "t3monitoring_client"
 =========================================
 This extensions provides a client for the the extension **t3monitoring**.
 
-**Requirements**
+**Version matrix**
 
-- TYPO3 CMS 9.5 LTS, 10.4 LTS or 11.3+ and 12.4
-- Use the branch `4-5` for support from 4.5 - 6.1
-- Use the branch `7-8` for support from 7.0 - 8.7
+==================  =================
+TYPO3 Core Version  Branch (Versions)
+==================  =================
+11.3 - 12.4         master (10.x)
+ 9.0 - 10.5         9-10 (9.x)
+ 7.0 -  8.7         7-8
+ 4.5 -  6.1         4-5
+==================  =================
 
 **Sponsors**
 
