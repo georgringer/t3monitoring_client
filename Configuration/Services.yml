@@ -6,7 +6,7 @@ services:
 
   T3Monitor\T3monitoringClient\:
     resource: '../Classes/*'
-  T3Monitor\T3monitoringClient\Slots\ExtensionManagerListener:
+  T3Monitor\T3monitoringClient\EventListener\ExtensionManagerListener:
     tags:
       - name: event.listener
         identifier: 'afterExtensionInstall'
