@@ -7,7 +7,7 @@ This extensions provides a client for the the extension **t3monitoring**.
 ==================  =================
 TYPO3 Core Version  Branch (Versions)
 ==================  =================
-11.3 - 13.1         master (10.x)
+11.3 - 13.4         master (10.x)
  9.0 - 10.5         9-10 (9.x)
  7.0 -  8.7         7-8
  4.5 -  6.1         4-5
