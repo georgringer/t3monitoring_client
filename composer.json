@@ -7,6 +7,8 @@
   ],
   "require": {
     "typo3/cms-core": "^11 || ^12 || ^13",
+    "typo3/cms-extensionmanager": "^11 || ^12 || ^13",
+    "typo3/cms-install": "^11 || ^12 || ^13",
     "typo3/cms-reports": "^11 || ^12 || ^13"
   },
   "require-dev": {
