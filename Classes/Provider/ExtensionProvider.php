@@ -8,6 +8,7 @@ namespace T3Monitor\T3monitoringClient\Provider;
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  */
+use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extensionmanager\Utility\EmConfUtility;
@@ -26,6 +27,7 @@ class ExtensionProvider implements DataProviderInterface
     public function get(array $data)
     {
         $listUtility = GeneralUtility::makeInstance(ListUtility::class);
+        $packageManager = GeneralUtility::makeInstance(PackageManager::class);
 
         $allExtensions = $listUtility->getAvailableExtensions();
 
@@ -41,8 +43,27 @@ class ExtensionProvider implements DataProviderInterface
 
             $data['extensions'][$key] = $extensionConfig;
             $data['extensions'][$key]['isLoaded'] = (int)ExtensionManagementUtility::isLoaded($key);
+            $data['extensions'][$key]['composerName'] = $this->getComposerName($packageManager, $key);
         }
 
         return $data;
+    }
+
+    /**
+     * Get the composer package name for an extension
+     *
+     * @param PackageManager $packageManager
+     * @param string $extensionKey
+     * @return string|null Returns the composer name (e.g., "vendor/package") or null if not available
+     */
+    private function getComposerName(PackageManager $packageManager, string $extensionKey): ?string
+    {
+        try {
+            $package = $packageManager->getPackage($extensionKey);
+            $composerName = $package->getValueFromComposerManifest('name');
+            return is_string($composerName) ? $composerName : null;
+        } catch (\TYPO3\CMS\Core\Package\Exception\UnknownPackageException $e) {
+            return null;
+        }
     }
 }
