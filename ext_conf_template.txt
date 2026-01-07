@@ -7,3 +7,6 @@ allowedIps = *
 
 # cat=features/enable/3; type=boolean; label=Enable debugging: Instead of silently stopping the endpoint call, the error is outputted. Just enable this to debug if a connection is not possible!
 enableDebugForErrors = 0
+
+# cat=features/enable/2; type=string; label=Allowed domains:Restrict the endpoint to specific domains. Comma separated lists are possible
+allowedDomains = *
