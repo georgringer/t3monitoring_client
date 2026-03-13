@@ -21,8 +21,8 @@ $config->setFinder(
 )
     ->setRiskyAllowed(true)
     ->setRules([
+        '@auto' => true,
         '@DoctrineAnnotation' => true,
-        '@PER' => true,
         'array_syntax' => ['syntax' => 'short'],
         'blank_line_after_opening_tag' => true,
         'braces' => ['allow_single_line_closure' => true],
