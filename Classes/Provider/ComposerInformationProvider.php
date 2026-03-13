@@ -16,11 +16,7 @@ use TYPO3\CMS\Core\Core\Environment;
  */
 class ComposerInformationProvider implements DataProviderInterface
 {
-    /**
-     * @param array $data
-     * @return array
-     */
-    public function get(array $data)
+    public function get(array $data): array
     {
         $data['extra']['info']['Composer Usage'] = Environment::isComposerMode() ? 'yes' : 'no';
         return $data;

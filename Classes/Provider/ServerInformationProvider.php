@@ -18,11 +18,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ServerInformationProvider implements DataProviderInterface
 {
-    /**
-     * @param array $data
-     * @return array
-     */
-    public function get(array $data)
+    public function get(array $data): array
     {
         $disabledFunctions = GeneralUtility::trimExplode(',', (string)ini_get('disable_functions'), true);
 

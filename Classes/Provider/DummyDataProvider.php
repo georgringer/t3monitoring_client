@@ -14,11 +14,7 @@ namespace T3Monitor\T3monitoringClient\Provider;
  */
 class DummyDataProvider implements DataProviderInterface
 {
-    /**
-     * @param array $data
-     * @return array
-     */
-    public function get(array $data)
+    public function get(array $data): array
     {
         $data['extra']['warning']['Warning 1'] = 'This is a warning';
         $data['extra']['warning']['Warning 2'] = 'This is another warning';

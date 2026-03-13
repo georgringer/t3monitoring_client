@@ -19,12 +19,7 @@ use TYPO3\CMS\Extensionmanager\Utility\ListUtility;
  */
 class ExtensionProvider implements DataProviderInterface
 {
-    /**
-     * @param array $data
-     * @return array
-     * @throws \BadFunctionCallException
-     */
-    public function get(array $data)
+    public function get(array $data): array
     {
         $listUtility = GeneralUtility::makeInstance(ListUtility::class);
         $packageManager = GeneralUtility::makeInstance(PackageManager::class);

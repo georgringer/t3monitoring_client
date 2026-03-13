@@ -24,11 +24,7 @@ use TYPO3\CMS\Reports\Status;
  */
 class StatusReportProvider implements DataProviderInterface
 {
-    /**
-     * @param array $data
-     * @return array
-     */
-    public function get(array $data)
+    public function get(array $data): array
     {
         $version = new Typo3Version();
         // todo: these checks fail with a type error on TYPO3 v12, disable them for now
