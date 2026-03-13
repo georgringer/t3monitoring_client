@@ -38,8 +38,8 @@ class StatusReportProvider implements DataProviderInterface
                 Status::WARNING => 'warning',
                 Status::ERROR => 'danger',
             ];
-            foreach ($statusCollection as $statusProvider => $providerStatuses) {
-                /** @var $status Status */
+            foreach ($statusCollection as $providerStatuses) {
+                /** @var Status $status */
                 foreach ($providerStatuses as $status) {
                     if ($status->getSeverity() > Status::OK) {
                         $title = sprintf('%s - %s', $status->getTitle(), $status->getValue());
@@ -56,7 +56,7 @@ class StatusReportProvider implements DataProviderInterface
     /**
      * Initialize some code which is usually only available in backend context
      */
-    protected function initialize()
+    protected function initialize(): void
     {
         $this->getLanguageService()->init('en');
         if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status'])) {
@@ -79,9 +79,6 @@ class StatusReportProvider implements DataProviderInterface
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers']['security'][] = SecurityStatusReport::class;
     }
 
-    /**
-     * @return LanguageService
-     */
     protected function getLanguageService(): LanguageService
     {
         if (!isset($GLOBALS['LANG'])) {

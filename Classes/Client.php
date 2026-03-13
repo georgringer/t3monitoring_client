@@ -20,17 +20,8 @@ use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\ServerRequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/**
- * Class Client
- */
 class Client
 {
-    /**
-     * Entry point
-     *
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function run(ServerRequestInterface $request): ResponseInterface
     {
         $settings = $this->getSettings();
@@ -45,9 +36,6 @@ class Client
             return $response;
         }
 
-        if (method_exists(Bootstrap::class, 'initializeBackendRouter')) {
-            Bootstrap::initializeBackendRouter();
-        }
         Bootstrap::loadExtTables();
 
         $data = $this->collectData();
@@ -70,33 +58,27 @@ class Client
      * Convert array to UTF-8
      *
      * @param string[] $array
-     * @return array
      */
-    protected function utf8Converter(array $array)
+    protected function utf8Converter(array $array): array
     {
         array_walk_recursive($array, function (&$item) {
             if (!mb_detect_encoding((string)$item, 'utf-8', true)) {
-                $item = utf8_encode($item);
+                $item = mb_convert_encoding((string)$item, 'UTF-8', 'ISO-8859-1');;
             }
         });
 
         return $array;
     }
 
-    /**
-     * Collect data
-     *
-     * @return array
-     */
-    protected function collectData()
+    protected function collectData(): array
     {
         $data = [];
+        /** @var class-string<DataProviderInterface>[] $classes */
         $classes = (array)$GLOBALS['TYPO3_CONF_VARS']['EXT']['t3monitoring_client']['provider'] ?? [];
 
         if (empty($classes)) {
             $data['error'] = 'No providers';
         } else {
-            // Since 10.4.16, the internal ExtensionProvider requires a request
             if (!($GLOBALS['TYPO3_REQUEST'] ?? null)) {
                 $request = ServerRequestFactory::fromGlobals();
                 $GLOBALS['TYPO3_REQUEST'] = $request->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_FE);
@@ -106,7 +88,7 @@ class Client
                 /** @var DataProviderInterface $call */
                 $call = GeneralUtility::makeInstance($class);
                 if (!$call instanceof DataProviderInterface) {
-                    $data['error'] = sprintf('The class "%s" does not implements "%s"!', $call, $class);
+                    $data['error'] = sprintf('The class "%s" does not implement DataProviderInterface!', $class);
                     return $data;
                 }
                 $data = $call->get($data);
@@ -117,9 +99,6 @@ class Client
 
     /**
      * Check if access is allowed to the endpoint
-     *
-     * @param ServerRequestInterface $request
-     * @return string
      */
     protected function checkAccess(ServerRequestInterface $request): string
     {
@@ -135,7 +114,7 @@ class Client
             return 'No secret or too small secret defined';
         }
 
-        if (!isset($settings['allowedIps']) || empty($settings['allowedIps'])) {
+        if (empty($settings['allowedIps'])) {
             return 'No allowed ips defined';
         }
         $remoteIp = GeneralUtility::getIndpEnv('REMOTE_ADDR');
@@ -152,7 +131,7 @@ class Client
         try {
             $extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class);
             $configuration = $extensionConfiguration->get('t3monitoring_client');
-        } catch (\Exception $exception) {
+        } catch (\Exception) {
             // do nothing
         }
 

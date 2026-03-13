@@ -26,7 +26,7 @@ final class ExtensionManagerListener
         if ($event->getPackageKey() === 't3monitoring_client') {
             try {
                 $configuration = $this->extensionConfiguration->get($event->getPackageKey());
-            } catch (\Exception $exception) {
+            } catch (\Exception) {
                 $configuration = [];
             }
 

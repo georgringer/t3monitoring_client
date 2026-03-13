@@ -22,10 +22,10 @@ class ExtensionProvider implements DataProviderInterface
     {
         $listUtility = GeneralUtility::makeInstance(ListUtility::class);
         $packageManager = GeneralUtility::makeInstance(PackageManager::class);
+        $emConfUtility = GeneralUtility::makeInstance(EmConfUtility::class);
 
         $allExtensions = $listUtility->getAvailableExtensions();
 
-        $emConfUtility = GeneralUtility::makeInstance(EmConfUtility::class);
         foreach ($allExtensions as $key => $f) {
             $extensionConfig = (array)$emConfUtility->includeEmConf($key, $f['packagePath']);
             if (!array_filter($extensionConfig)) {
