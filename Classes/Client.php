@@ -70,6 +70,14 @@ class Client
         return $array;
     }
 
+    /**
+     * @return array{
+     *     error?: string,
+     *     core?: array<non-empty-string, int|string>,
+     *     extensions?: array<non-empty-string, array>,
+     *     extra?: array,
+     *   }
+     */
     protected function collectData(): array
     {
         $data = [];
