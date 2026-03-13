@@ -7,11 +7,13 @@ $EM_CONF[$_EXTKEY] = [
     'author' => 'Georg Ringer',
     'author_email' => '',
     'state' => 'stable',
-    'version' => '10.1.2',
+    'version' => '11.0.0',
     'constraints' => [
         'depends' => [
-            'typo3' => '11.3.0-13.4.99',
-            'reports' => '11.3.0-13.4.99',
+            'typo3' => '12.4.0-14.3.99',
+            'install' => '12.4.0-14.3.99',
+            'extensionmanager' => '12.4.0-14.3.99',
+            'reports' => '12.4.0-14.3.99',
         ],
         'conflicts' => [],
         'suggests' => [],
