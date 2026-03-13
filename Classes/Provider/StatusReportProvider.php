@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace T3Monitor\T3monitoringClient\Provider;
 
 /*
@@ -19,9 +21,6 @@ use TYPO3\CMS\Install\Report\SecurityStatusReport;
 use TYPO3\CMS\Reports\Report\Status as Stati;
 use TYPO3\CMS\Reports\Status;
 
-/**
- * Class StatusReportProvider
- */
 class StatusReportProvider implements DataProviderInterface
 {
     public function get(array $data): array

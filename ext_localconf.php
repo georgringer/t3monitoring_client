@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use T3Monitor\T3monitoringClient\Client;
 use T3Monitor\T3monitoringClient\Provider\ComposerInformationProvider;
 use T3Monitor\T3monitoringClient\Provider\ExtensionProvider;

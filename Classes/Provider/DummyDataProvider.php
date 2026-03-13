@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace T3Monitor\T3monitoringClient\Provider;
 
 /*
@@ -9,9 +11,6 @@ namespace T3Monitor\T3monitoringClient\Provider;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-/**
- * Class DummyDataProvider
- */
 class DummyDataProvider implements DataProviderInterface
 {
     public function get(array $data): array

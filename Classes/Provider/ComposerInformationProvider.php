@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace T3Monitor\T3monitoringClient\Provider;
 
 /*
@@ -11,9 +13,6 @@ namespace T3Monitor\T3monitoringClient\Provider;
 
 use TYPO3\CMS\Core\Core\Environment;
 
-/**
- * Class ComposerInformationProvider
- */
 class ComposerInformationProvider implements DataProviderInterface
 {
     public function get(array $data): array

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace T3Monitor\T3monitoringClient\Provider;
 
 /*
@@ -14,9 +16,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extensionmanager\Utility\EmConfUtility;
 use TYPO3\CMS\Extensionmanager\Utility\ListUtility;
 
-/**
- * Class ExtensionProvider
- */
 class ExtensionProvider implements DataProviderInterface
 {
     public function get(array $data): array
