@@ -19,10 +19,6 @@ TYPO3 Core Version  Branch (Versions)
 - Sup7
 - Reelworx
 
-**Important**
-
-This extension is still beta and things might change!
-
 Configuration
 -------------
 After installing the extension, configure the extension in the settings of the *Extension Manager*.
@@ -46,4 +42,8 @@ Extending the client
 
 It is possible to extend the client and provide additional data which can be displayed later in the master installation.
 
-Things might change there, so no manual about it yet.
+Register your provider in your :path:`ext_localconf.php`:
+
+:php:`$GLOBALS['TYPO3_CONF_VARS']['EXT']['t3monitoring_client']['provider'][] = MyProvider::class;`
+
+:php:`MyProvider` must implement the interface :php:`\T3Monitor\T3monitoringClient\Provider\DataProviderInterface`
