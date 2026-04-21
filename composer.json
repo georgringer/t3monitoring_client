@@ -42,7 +42,11 @@
 		},
 		"typo3/cms": {
 			"extension-key": "t3monitoring_client",
-			"web-dir": ".Build/web"
+			"version": "11.0.0",
+			"web-dir": ".Build/web",
+			"Package": {
+				"providesPackages": {}
+			}
 		}
 	}
 }
