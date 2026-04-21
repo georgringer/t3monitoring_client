@@ -14,13 +14,14 @@
 		"typo3/cms-reports": "^12 || ^13 || ^14"
 	},
 	"require-dev": {
+		"typo3/minimal": "^12 || ^13 || ^14",
 		"typo3/testing-framework": "^8",
 		"typo3/coding-standards": "^v0.8.0",
 		"friendsofphp/php-cs-fixer": "^3.13.0"
 	},
 	"config": {
+		"lock": false,
 		"vendor-dir": ".Build/vendor",
-		"bin-dir": ".Build/bin",
 		"allow-plugins": {
 			"typo3/class-alias-loader": true,
 			"typo3/cms-composer-installers": true
@@ -32,14 +33,16 @@
 		}
 	},
 	"scripts": {
-		"cs": "php ./.Build/bin/php-cs-fixer fix  --dry-run -v --config ./Build/php-cs-fixer/php-cs-fixer.php ./",
-		"csfix": "php ./.Build/bin/php-cs-fixer fix  -v --config ./Build/php-cs-fixer/php-cs-fixer.php ./"
+		"cs": "php ./.Build/vendor/bin/php-cs-fixer fix  --dry-run -v --config ./Build/php-cs-fixer/php-cs-fixer.php ./",
+		"csfix": "php ./.Build/vendor/bin/php-cs-fixer fix  -v --config ./Build/php-cs-fixer/php-cs-fixer.php ./"
 	},
 	"extra": {
+		"branch-alias": {
+			"dev-master": "11.x-dev"
+		},
 		"typo3/cms": {
 			"extension-key": "t3monitoring_client",
-			"app-dir": ".Build",
-			"web-dir": ".Build/Web"
+			"web-dir": ".Build/web"
 		}
 	}
 }
