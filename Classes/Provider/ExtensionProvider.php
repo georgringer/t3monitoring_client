@@ -10,6 +10,8 @@ namespace T3Monitor\T3monitoringClient\Provider;
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  */
+
+use TYPO3\CMS\Core\Package\Exception\UnknownPackageException;
 use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -56,7 +58,7 @@ class ExtensionProvider implements DataProviderInterface
             $package = $packageManager->getPackage($extensionKey);
             $composerName = $package->getValueFromComposerManifest('name');
             return is_string($composerName) ? $composerName : null;
-        } catch (\TYPO3\CMS\Core\Package\Exception\UnknownPackageException $e) {
+        } catch (UnknownPackageException) {
             return null;
         }
     }

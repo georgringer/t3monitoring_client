@@ -63,7 +63,7 @@ class Client
     {
         array_walk_recursive($array, function (&$item) {
             if (!mb_detect_encoding((string)$item, 'utf-8', true)) {
-                $item = mb_convert_encoding((string)$item, 'UTF-8', 'ISO-8859-1');;
+                $item = mb_convert_encoding((string)$item, 'UTF-8', 'ISO-8859-1');
             }
         });
 
