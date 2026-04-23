@@ -62,8 +62,16 @@ class Client
     protected function utf8Converter(array $array): array
     {
         array_walk_recursive($array, function (&$item) {
-            if (!mb_detect_encoding((string)$item, 'utf-8', true)) {
-                $item = mb_convert_encoding((string)$item, 'UTF-8', 'ISO-8859-1');
+            if ($item instanceof \BackedEnum) {
+                $item = $item->value;
+            } elseif ($item instanceof \UnitEnum) {
+                $item = $item->name;
+            }
+            if (!is_string($item)) {
+                return;
+            }
+            if (!mb_detect_encoding($item, 'utf-8', true)) {
+                $item = mb_convert_encoding($item, 'UTF-8', 'ISO-8859-1');
             }
         });
 
