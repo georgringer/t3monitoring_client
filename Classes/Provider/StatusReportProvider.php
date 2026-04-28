@@ -11,6 +11,7 @@ namespace T3Monitor\T3monitoringClient\Provider;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -18,6 +19,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class StatusReportProvider implements DataProviderInterface
 {
+    public function __construct(protected ServerRequestInterface $request) {}
+
     public function get(array $data): array
     {
         if (!ExtensionManagementUtility::isLoaded('reports')) {
@@ -30,7 +33,7 @@ class StatusReportProvider implements DataProviderInterface
             $stati = $statusReport->getSystemStatus();
         } else {
             $statusService = GeneralUtility::makeInstance(\TYPO3\CMS\Reports\Service\StatusService::class);
-            $stati = $statusService->getSystemStatus();
+            $stati = $statusService->getSystemStatus($this->request);
         }
         foreach ($stati as $providerStatuses) {
             foreach ($providerStatuses as $status) {
