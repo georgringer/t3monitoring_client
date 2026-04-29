@@ -15,9 +15,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use T3Monitor\T3monitoringClient\Provider\DataProviderInterface;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Bootstrap;
-use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\Response;
-use TYPO3\CMS\Core\Http\ServerRequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Client
@@ -38,7 +36,7 @@ class Client
 
         Bootstrap::loadExtTables();
 
-        $data = $this->collectData();
+        $data = $this->collectData($request);
         $data = $this->utf8Converter($data);
 
         // Generate json
@@ -86,7 +84,7 @@ class Client
      *     extra?: array,
      *   }
      */
-    protected function collectData(): array
+    protected function collectData(ServerRequestInterface $request): array
     {
         $data = [];
         /** @var class-string<DataProviderInterface>[] $classes */
@@ -95,14 +93,9 @@ class Client
         if (empty($classes)) {
             $data['error'] = 'No providers';
         } else {
-            if (!($GLOBALS['TYPO3_REQUEST'] ?? null)) {
-                $request = ServerRequestFactory::fromGlobals();
-                $GLOBALS['TYPO3_REQUEST'] = $request->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_FE);
-            }
-
             foreach ($classes as $class) {
                 /** @var DataProviderInterface $call */
-                $call = GeneralUtility::makeInstance($class);
+                $call = GeneralUtility::makeInstance($class, $request);
                 if (!$call instanceof DataProviderInterface) {
                     $data['error'] = sprintf('The class "%s" does not implement DataProviderInterface!', $class);
                     return $data;
