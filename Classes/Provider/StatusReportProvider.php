@@ -13,6 +13,7 @@ namespace T3Monitor\T3monitoringClient\Provider;
 
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -27,6 +28,10 @@ class StatusReportProvider implements DataProviderInterface
             return $data;
         }
         $version = new Typo3Version();
+
+        if (!($GLOBALS['LANG'] ?? null)) {
+            $GLOBALS['LANG'] = GeneralUtility::makeInstance(LanguageServiceFactory::class)->create('default');
+        }
 
         if ($version->getMajorVersion() < 14) {
             $statusReport = GeneralUtility::makeInstance(\TYPO3\CMS\Reports\Report\Status\Status::class);
