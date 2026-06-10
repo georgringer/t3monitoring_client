@@ -93,6 +93,12 @@ class Client
         if (empty($classes)) {
             $data['error'] = 'No providers';
         } else {
+            // Some extensions fiddle around with middlewares and already set the request to GLOBALS.
+            // This kills the Core's extension listing, which relies on Extbase's configuration.
+            // Since this request is a frontend request (we're in eID context), the Extbase configuration
+            // starts handling TypoScript stuff, which is not there.
+            // Removing this global request fixes that non-intended behavior.
+            unset($GLOBALS['TYPO3_REQUEST']);
             foreach ($classes as $class) {
                 /** @var DataProviderInterface $call */
                 $call = GeneralUtility::makeInstance($class, $request);
